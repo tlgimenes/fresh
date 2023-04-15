@@ -1,17 +1,7 @@
-import { Options } from "$fresh/plugins/twind.ts";
-import * as colors from "twind/colors";
+import { defineConfig } from "https://esm.sh/@twind/core@1.1.3";
+import presetTailwind from "https://esm.sh/@twind/preset-tailwind@1.0.1";
 
-export default {
-  selfURL: import.meta.url,
-  theme: {
-    colors: {
-      blue: colors.blue,
-      black: colors.black,
-      gray: colors.gray,
-      green: colors.green,
-      white: colors.white,
-      yellow: colors.yellow,
-      transparent: "transparent",
-    },
-  },
-} as Options;
+export default defineConfig({
+  darkMode: false,
+  presets: [presetTailwind()],
+});
