@@ -23,26 +23,42 @@ declare module "preact" {
 }
 
 export function setup({ selfURL: _selfURL, ...config }: Options, sheet: Sheet) {
+  const originalClass: string[] = [];
+  const resetOriginalClass = () =>
+    originalClass.splice(0, originalClass.length);
+
   twSetup(config, sheet);
 
   const originalHook = preactOptions.vnode;
-  // deno-lint-ignore no-explicit-any
-  preactOptions.vnode = (vnode: VNode<JSX.DOMAttributes<any>>) => {
+  preactOptions.vnode = (vnode: VNode<JSX.DOMAttributes<EventTarget>>) => {
     if (typeof vnode.type === "string" && typeof vnode.props === "object") {
       const { props } = vnode;
-      const classes: string[] = [];
-      if (props.class) {
-        classes.push(tw(props.class));
-        props.class = undefined;
+
+      if (typeof props.class === "string") {
+        const transformed = tw(props.class);
+
+        if (transformed !== props.class) {
+          originalClass.push(props.class);
+        }
+
+        props.class = transformed;
       }
-      if (props.className) {
-        classes.push(tw(props.className));
-      }
-      if (classes.length) {
-        props.class = classes.join(" ");
+      if (typeof props.className === "string") {
+        const transformed = tw(props.className);
+
+        if (transformed !== props.className) {
+          originalClass.push(props.className);
+        }
+        
+        props.className = tw(props.className);
       }
     }
 
     originalHook?.(vnode);
+  };
+
+  return {
+    originalClass,
+    resetOriginalClass,
   };
 }

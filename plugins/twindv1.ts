@@ -6,7 +6,7 @@ export type { Options };
 
 export default function twindv1(options: Options): Plugin {
   const sheet = virtual(true);
-  setup(options, sheet);
+  const twind = setup(options, sheet);
   const main = `data:application/javascript,import hydrate from "${
     new URL("./twindv1/main.ts", import.meta.url).href
   }";
@@ -16,11 +16,13 @@ export default function(state) { hydrate(options, state); }`;
     name: "twind",
     entrypoints: { "main": main },
     render(ctx) {
+      twind.resetOriginalClass();
       const res = ctx.render();
       const cssText = stringify(sheet.target);
+
       const scripts = [];
       if (res.requiresHydration) {
-        scripts.push({ entrypoint: "main", state: [] });
+        scripts.push({ entrypoint: "main", state: twind.originalClass });
       }
       return {
         scripts,
