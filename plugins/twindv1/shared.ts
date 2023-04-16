@@ -49,7 +49,7 @@ export function setup({ selfURL: _selfURL, ...config }: Options, sheet: Sheet) {
         if (transformed !== props.className) {
           originalClass.push(props.className);
         }
-        
+
         props.className = tw(props.className);
       }
     }
