@@ -118,22 +118,22 @@ function freshSheet(classes: string[]): Sheet<CSSStyleSheet> {
 }
 
 export default function hydrate(options: TwindConfig, state: string[]) {
-  const originalHook = preactOptions.vnode;
-  // deno-lint-ignore no-explicit-any
-  preactOptions.vnode = (vnode: VNode<JSX.DOMAttributes<any>>) => {
-    if (typeof vnode.type === "string" && typeof vnode.props === "object") {
-      const { props } = vnode;
+  // const originalHook = preactOptions.vnode;
+  // // deno-lint-ignore no-explicit-any
+  // preactOptions.vnode = (vnode: VNode<JSX.DOMAttributes<any>>) => {
+  //   if (typeof vnode.type === "string" && typeof vnode.props === "object") {
+  //     const { props } = vnode;
 
-      if (typeof props.class === "string") {
-        props.class = tw(props.class);
-      }
-      if (typeof props.className === "string") {
-        props.className = tw(props.className);
-      }
-    }
+  //     if (typeof props.class === "string") {
+  //       props.class = tw(props.class);
+  //     }
+  //     if (typeof props.className === "string") {
+  //       props.className = tw(props.className);
+  //     }
+  //   }
 
-    originalHook?.(vnode);
-  };
+  //   originalHook?.(vnode);
+  // };
 
   const sheet = freshSheet(state);
 

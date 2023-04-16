@@ -41,13 +41,15 @@ export function revive(islands: Record<string, ComponentType>, props: any[]) {
       startNode.parentNode!.removeChild(startNode); // remove start tag node
 
       const [id, n] = tag.split(":");
-      render(
-        h(islands[id], props[Number(n)]),
-        createRootFragment(
-          parent! as HTMLElement,
-          children,
-          // deno-lint-ignore no-explicit-any
-        ) as any as HTMLElement,
+      window.scheduler.postTask(() =>
+        render(
+          h(islands[id], props[Number(n)]),
+          createRootFragment(
+            parent! as HTMLElement,
+            children,
+            // deno-lint-ignore no-explicit-any
+          ) as any as HTMLElement,
+        )
       );
       endNode = node;
     }
@@ -61,7 +63,8 @@ export function revive(islands: Record<string, ComponentType>, props: any[]) {
     if (sib) walk(sib);
     if (fc) walk(fc);
   }
-  walk(document.body);
+
+  window.scheduler.postTask(() => walk(document.body));
 }
 
 const originalHook = options.vnode;
